@@ -17,7 +17,7 @@ use crate::font::FontRef;
 pub struct Scaler {
     entries: Vec<Entry>,
     max_entries: usize,
-    epoch: u64,
+    epoch: usize,
 }
 
 impl Scaler {
@@ -32,7 +32,7 @@ impl Scaler {
     pub fn scale(
         &mut self,
         font: &FontRef,
-        id: u64,
+        id: usize,
         coords: &[i16],
         proxy: &CffProxy,
         scale: f32,
@@ -59,7 +59,7 @@ impl Scaler {
 
     fn entry(
         &mut self,
-        id: u64,
+        id: usize,
         dict: u16,
         coords: &[i16],
         scale: f32,
@@ -98,7 +98,7 @@ impl Scaler {
         }
     }
 
-    fn find_entry(&self, id: u64, dict: u16, coords: &[i16], scale: f32) -> (bool, usize) {
+    fn find_entry(&self, id: usize, dict: u16, coords: &[i16], scale: f32) -> (bool, usize) {
         let mut lowest_epoch = self.epoch;
         let mut lowest_index = 0;
         let vary = !coords.is_empty();
@@ -123,8 +123,8 @@ impl Scaler {
 }
 
 struct Entry {
-    epoch: u64,
-    id: u64,
+    epoch: usize,
+    id: usize,
     dict: u16,
     state: HinterState,
     coords: Vec<i16>,

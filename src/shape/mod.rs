@@ -357,7 +357,7 @@ pub struct ShaperBuilder<'a> {
     state: &'a mut State,
     feature_cache: &'a mut FeatureCache,
     font: FontRef<'a>,
-    font_id: u64,
+    font_id: usize,
     font_entry: &'a FontEntry,
     coords: &'a mut Vec<i16>,
     charmap: Charmap<'a>,

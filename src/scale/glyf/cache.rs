@@ -11,7 +11,7 @@ pub struct Cache {
     stack: Vec<i32>,
     twilight: Vec<Point>,
     twilight_tags: Vec<u8>,
-    epoch: u64,
+    epoch: usize,
     max_entries: usize,
 }
 
@@ -30,7 +30,7 @@ impl Cache {
 
     pub fn prepare(
         &mut self,
-        font_id: u64,
+        font_id: usize,
         data: &[u8],
         proxy: &GlyfProxy,
         coords: &[i16],
@@ -208,7 +208,7 @@ impl Cache {
         }
     }
 
-    fn find_font(&mut self, font_id: u64) -> (bool, usize) {
+    fn find_font(&mut self, font_id: usize) -> (bool, usize) {
         let mut lowest_epoch = self.epoch;
         let mut lowest_index = 0;
         for (i, font) in self.fonts.iter().enumerate() {
@@ -229,7 +229,7 @@ impl Cache {
 
     fn find_size(
         &mut self,
-        font_id: u64,
+        font_id: usize,
         coords: &[i16],
         scale: i32,
         mode: HinterMode,
@@ -260,20 +260,20 @@ impl Cache {
 
 #[derive(Default)]
 struct FontEntry {
-    font_id: u64,
+    font_id: usize,
     definitions: Vec<Function>,
     max_fdefs: usize,
     cvt_len: usize,
-    epoch: u64,
+    epoch: usize,
 }
 
 #[derive(Default)]
 struct SizeEntry {
-    font_id: u64,
+    font_id: usize,
     state: HinterState,
     mode: HinterMode,
     coords: Vec<i16>,
     scale: i32,
     store: Vec<i32>,
-    epoch: u64,
+    epoch: usize,
 }

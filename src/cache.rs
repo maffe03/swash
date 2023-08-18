@@ -2,18 +2,18 @@ use super::FontRef;
 
 /// Uniquely generated value for identifying and caching fonts.
 #[derive(Copy, Clone, PartialOrd, Ord, PartialEq, Eq, Hash, Debug)]
-pub struct CacheKey(pub(crate) u64);
+pub struct CacheKey(pub(crate) usize);
 
 impl CacheKey {
     /// Generates a new cache key.
     pub fn new() -> Self {
-        use core::sync::atomic::{AtomicU64, Ordering};
-        static KEY: AtomicU64 = AtomicU64::new(1);
+        use core::sync::atomic::{AtomicUsize, Ordering};
+        static KEY: AtomicUsize = AtomicUsize::new(1);
         Self(KEY.fetch_add(1, Ordering::Relaxed))
     }
 
     /// Returns the underlying value of the key.
-    pub fn value(self) -> u64 {
+    pub fn value(self) -> usize {
         self.0
     }
 }
@@ -27,7 +27,7 @@ impl Default for CacheKey {
 pub struct FontCache<T> {
     entries: Vec<Entry<T>>,
     max_entries: usize,
-    epoch: u64,
+    epoch: usize,
 }
 
 impl<T> FontCache<T> {
@@ -39,7 +39,7 @@ impl<T> FontCache<T> {
         }
     }
 
-    pub fn get<'a>(&'a mut self, font: &FontRef, mut f: impl FnMut(&FontRef) -> T) -> (u64, &'a T) {
+    pub fn get<'a>(&'a mut self, font: &FontRef, mut f: impl FnMut(&FontRef) -> T) -> (usize, &'a T) {
         let (found, index) = self.find(font);
         if found {
             let entry = &mut self.entries[index];
@@ -89,7 +89,7 @@ impl<T> FontCache<T> {
 }
 
 struct Entry<T> {
-    epoch: u64,
-    id: u64,
+    epoch: usize,
+    id: usize,
     data: T,
 }
